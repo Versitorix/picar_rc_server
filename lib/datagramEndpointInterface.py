@@ -1,10 +1,11 @@
 from socket import socket, AF_INET, SOCK_DGRAM
-import asyncio
+from asyncio import BaseProtocol
 
 
-class DatagramEndpointInterface:
+class DatagramEndpointInterface(BaseProtocol):
     def __init__(self, handler):
         self.handler = handler
+        self.transport = None
 
     def connection_made(self, transport):
         self.transport = transport
