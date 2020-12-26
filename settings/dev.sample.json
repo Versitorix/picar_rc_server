@@ -1,0 +1,5 @@
+{
+    "commands_port": "<PORT>",
+    "connectivity_port": "<PORT>",
+    "server_ip": "<SERVER IP>"
+}
