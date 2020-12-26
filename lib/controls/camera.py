@@ -11,9 +11,10 @@
 **********************************************************************
 '''
 
-from picar.SunFounder_PCA9685 import Servo
 import time
+
 from picar import filedb
+from picar.SunFounder_PCA9685 import Servo
 
 
 class Camera(object):
