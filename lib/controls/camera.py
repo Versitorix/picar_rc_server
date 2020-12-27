@@ -11,25 +11,24 @@
 **********************************************************************
 '''
 
-import time
-
-from picar import filedb
 from picar.SunFounder_PCA9685 import Servo
+import time
+from picar import filedb
 
 
 class Camera(object):
     '''Camera movement control class'''
-    pan_channel = 1			# Pan servo channel
-    tilt_channel = 2		# Tilt servo channel
+    pan_channel = 1  # Pan servo channel
+    tilt_channel = 2  # Tilt servo channel
 
-    READY_PAN = 90			# Ready position angle
-    READY_TILT = 90			# Ready position angle
-    CALI_PAN = 90			# Calibration position angle
-    CALI_TILT = 90			# Calibration position angle
+    READY_PAN = 90  # Ready position angle
+    READY_TILT = 90  # Ready position angle
+    CALI_PAN = 90  # Calibration position angle
+    CALI_TILT = 90  # Calibration position angle
 
     CAMERA_DELAY = 0.005
-    PAN_STEP = 15				# Pan step = 5 degree
-    TILT_STEP = 10			# Tilt step = 5 degree
+    PAN_STEP = 15  # Pan step = 5 degree
+    TILT_STEP = 10  # Tilt step = 5 degree
 
     _DEBUG = False
     _DEBUG_INFO = 'DEBUG "camera.py":'
@@ -40,16 +39,8 @@ class Camera(object):
         self.pan_offset = int(self.db.get('pan_offset', default_value=0))
         self.tilt_offset = int(self.db.get('tilt_offset', default_value=0))
 
-        self.pan_servo = Servo.Servo(
-            self.pan_channel,
-            bus_number=bus_number,
-            offset=self.pan_offset
-        )
-        self.tilt_servo = Servo.Servo(
-            self.tilt_channel,
-            bus_number=bus_number,
-            offset=self.tilt_offset
-        )
+        self.pan_servo = Servo.Servo(self.pan_channel, bus_number=bus_number, offset=self.pan_offset)
+        self.tilt_servo = Servo.Servo(self.tilt_channel, bus_number=bus_number, offset=self.tilt_offset)
         self.debug = debug
         if self._DEBUG:
             print(self._DEBUG_INFO, 'Pan servo channel:', self.pan_channel)
