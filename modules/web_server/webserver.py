@@ -4,6 +4,7 @@ from lib.settings import SETTINGS
 
 app = Flask(__name__)
 
+
 @app.route("/")
 def index():
     # return the rendered template
