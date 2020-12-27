@@ -2,7 +2,7 @@ from json import loads
 
 
 class Settings(object):
-    def __init__(self, commands_port, connectivity_port, server_ip):
+    def __init__(self, commands_port, connectivity_port, web_port, server_ip):
         """
         Instantiate a new Settings object.
 
@@ -13,6 +13,7 @@ class Settings(object):
 
         self.commands_port = commands_port
         self.connectivity_port = connectivity_port
+        self.web_port = web_port
         self.server_ip = server_ip
 
     @staticmethod
@@ -27,9 +28,10 @@ class Settings(object):
         json_dict = loads(json_string)
         commands_port = json_dict['commands_port']
         connectivity_port = json_dict['connectivity_port']
+        web_port = json_dict['web_port']
         server_ip = json_dict['server_ip']
 
-        return Settings(commands_port, connectivity_port, server_ip)
+        return Settings(commands_port, connectivity_port, web_port, server_ip)
 
 
 file = open('./settings/dev.json', 'r').read()
