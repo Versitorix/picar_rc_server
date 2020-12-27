@@ -1,3 +1,4 @@
 __pycache__
 settings/dev.json
 /venv/
+/.idea/
