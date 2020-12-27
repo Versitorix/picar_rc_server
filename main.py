@@ -1,7 +1,7 @@
 """Application entry point."""
 import asyncio
 
-from lib.commandsServer import CommandsServer
+from modules.commandsServer import CommandsServer
 
 
 async def main():
