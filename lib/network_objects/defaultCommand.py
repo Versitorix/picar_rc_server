@@ -1,4 +1,4 @@
-from json import loads
+from json import loads, dumps
 
 
 class DefaultCommand(object):
@@ -25,3 +25,13 @@ class DefaultCommand(object):
 
         @type json_string: string
         """
+
+    def to_string(self):
+        """
+
+        @return: string
+        """
+
+        return dumps({
+            "type": DefaultCommand.type
+        })
