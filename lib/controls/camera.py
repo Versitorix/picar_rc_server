@@ -11,9 +11,10 @@
 **********************************************************************
 '''
 
-from picar.SunFounder_PCA9685 import Servo
 from asyncio import sleep
+
 from picar import filedb
+from picar.SunFounder_PCA9685 import Servo
 
 
 def safe_plus(variable, plus_value):

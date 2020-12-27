@@ -11,9 +11,9 @@
 *               xxx    xxxx-xx-xx    xxxxxxxx
 **********************************************************************
 """
-import tempfile
-import subprocess
 import os
+import subprocess
+import tempfile
 
 _CODE_DIR_ = "/home/pi/SunFounder_PiCar-V"
 
