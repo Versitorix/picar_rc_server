@@ -9,6 +9,7 @@ from lib.network_objects.defaultCommand import DefaultCommand
 from lib.network_objects.cameraCommand import CameraCommand
 from lib.network_objects.backWheelCommand import BackWheelCommand
 from lib.network_objects.frontWheelCommand import FrontWheelCommand
+from lib.cancellationToken import CancellationToken
 from lib.settings import SETTINGS
 from lib.controls.camera import Camera
 
@@ -21,6 +22,9 @@ class CommandsServer:
         self.camera_controls = Camera(debug=False, db='./lib/controls/config')
         self.back_wheels = Back_Wheels(debug=False, db='./lib/controls/config')
         self.front_wheels = Front_Wheels(debug=False, db='./lib/controls/config')
+
+        self.camera_task = None
+        self.camera_task_token = None
 
     async def start(self):
         loop = asyncio.get_running_loop()
@@ -57,22 +61,30 @@ class CommandsServer:
             elif camera_command.movement_type == 'pan_right':
                 self.camera_controls.turn_right(camera_command.movement_value)
             elif camera_command.movement_type == 'set_position':
-                self.camera_controls.to_position(
+                if self.camera_task:
+                    self.camera_task.cancel()
+                    self.camera_task_token.cancel()
+
+                self.camera_task_token = CancellationToken()
+                self.camera_task = asyncio.create_task(self.camera_controls.to_position(
                     expect_pan=camera_command.movement_value[0],
                     expect_tilt=camera_command.movement_value[1],
                     delay=0,
-                )
+                    cancellation_token=self.camera_task_token,
+                ))
         elif command_type == BackWheelCommand.type:
             wheel_command = BackWheelCommand.from_string(message)
 
             if wheel_command.action == 'stop':
                 self.back_wheels.stop()
             elif wheel_command.action == 'forward':
+                self.back_wheels.speed = wheel_command.action_value
                 self.back_wheels.forward()
             elif wheel_command.action == 'backward':
+                self.back_wheels.speed = wheel_command.action_value
                 self.back_wheels.backward()
             elif wheel_command.action == 'set_speed':
-                self.back_wheels.speed(wheel_command.action_value)
+                self.back_wheels.speed = wheel_command.action_value
         elif command_type == FrontWheelCommand.type:
             wheel_command = FrontWheelCommand.from_string(message)
 

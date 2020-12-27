@@ -12,8 +12,18 @@
 '''
 
 from picar.SunFounder_PCA9685 import Servo
-import time
+from asyncio import sleep
 from picar import filedb
+
+
+def safe_plus(variable, plus_value):
+    ''' Plus angle safely with no over ranges '''
+    variable += plus_value
+    if variable > 180:
+        variable = 180
+    if variable < 0:
+        variable = 0
+    return variable
 
 
 class Camera(object):
@@ -52,73 +62,62 @@ class Camera(object):
         self.current_tilt = 0
         self.ready()
 
-    def safe_plus(self, variable, plus_value):
-        ''' Plus angle safely with no over ranges '''
-        variable += plus_value
-        if variable > 180:
-            variable = 180
-        if variable < 0:
-            variable = 0
-        return variable
-
     def turn_left(self, step=PAN_STEP):
         ''' Control the pan servo to make the camera turning left '''
         if self._DEBUG:
             print(self._DEBUG_INFO, 'Turn left at step:', step)
-        self.current_pan = self.safe_plus(self.current_pan, step)
+        self.current_pan = safe_plus(self.current_pan, step)
         self.pan_servo.write(self.current_pan)
 
     def turn_right(self, step=PAN_STEP):
         ''' Control the pan servo to make the camera turning right '''
         if self._DEBUG:
             print(self._DEBUG_INFO, 'Turn right at step:', step)
-        self.current_pan = self.safe_plus(self.current_pan, -step)
+        self.current_pan = safe_plus(self.current_pan, -step)
         self.pan_servo.write(self.current_pan)
 
     def turn_up(self, step=TILT_STEP):
         ''' Control the tilt servo to make the camera turning up '''
         if self._DEBUG:
             print(self._DEBUG_INFO, 'Turn up at step:', step)
-        self.current_tilt = self.safe_plus(self.current_tilt, step)
+        self.current_tilt = safe_plus(self.current_tilt, step)
         self.tilt_servo.write(self.current_tilt)
 
     def turn_down(self, step=TILT_STEP):
         '''Control the tilt servo to make the camera turning down'''
         if self._DEBUG:
             print(self._DEBUG_INFO, 'Turn down at step:', step)
-        self.current_tilt = self.safe_plus(self.current_tilt, -step)
+        self.current_tilt = safe_plus(self.current_tilt, -step)
         self.tilt_servo.write(self.current_tilt)
 
-    def to_position(self, expect_pan, expect_tilt, delay=CAMERA_DELAY):
+    async def to_position(self, expect_pan, expect_tilt, cancellation_token, delay=CAMERA_DELAY):
         '''Control two servo to write the camera to ready position'''
         pan_diff = self.current_pan - expect_pan
         tilt_diff = self.current_tilt - expect_tilt
+
         if self._DEBUG:
             print(self._DEBUG_INFO, 'Turn to posision [%s, %s] (pan, tilt)' % (expect_pan, expect_tilt))
-        while True:
-            if pan_diff != 0 or tilt_diff != 0:
-                pan_diff = self.current_pan - expect_pan
-                tilt_diff = self.current_tilt - expect_tilt
-                if abs(pan_diff) > 1:
-                    if pan_diff < 0:
-                        self.current_pan = self.safe_plus(self.current_pan, 1)
-                    elif pan_diff > 0:
-                        self.current_pan = self.safe_plus(self.current_pan, -1)
-                else:
-                    self.current_pan = expect_pan
-                if abs(tilt_diff) > 1:
-                    if tilt_diff < 0:
-                        self.current_tilt = self.safe_plus(self.current_tilt, 1)
-                    elif tilt_diff > 0:
-                        self.current_tilt = self.safe_plus(self.current_tilt, -1)
-                else:
-                    self.current_tilt = expect_tilt
-
-                self.pan_servo.write(self.current_pan)
-                self.tilt_servo.write(self.current_tilt)
-                time.sleep(delay)
+        while (pan_diff != 0 or tilt_diff != 0) and not cancellation_token.isCancelled:
+            pan_diff = self.current_pan - expect_pan
+            tilt_diff = self.current_tilt - expect_tilt
+            if abs(pan_diff) > 1:
+                if pan_diff < 0:
+                    self.current_pan = safe_plus(self.current_pan, 1)
+                elif pan_diff > 0:
+                    self.current_pan = safe_plus(self.current_pan, -1)
             else:
-                break
+                self.current_pan = expect_pan
+            if abs(tilt_diff) > 1:
+                if tilt_diff < 0:
+                    self.current_tilt = safe_plus(self.current_tilt, 1)
+                elif tilt_diff > 0:
+                    self.current_tilt = safe_plus(self.current_tilt, -1)
+            else:
+                self.current_tilt = expect_tilt
+
+            self.pan_servo.write(self.current_pan)
+            self.tilt_servo.write(self.current_tilt)
+            await sleep(delay)
 
     def ready(self):
         ''' Set the camera to ready position '''
