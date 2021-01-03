@@ -1,6 +1,6 @@
 # RC Server
 
-Ce dépôt contenant deux serveurs servant à contrôller le véhicule PiCar de SunFounder à l'aide de commandes envoyés en UDP.
+Ce dépôt contient deux serveurs servant à contrôler le véhicule PiCar de SunFounder à l'aide de commandes envoyés en UDP.
 
 ## Pré-requis
 
@@ -34,7 +34,7 @@ python3 ./webmain.py
 
 ### Serveur de commandes
 
-Le serveur de commande est un serveur UDP servant a recevoir les directions de contrôles du véhicule.
+Le serveur de commandes est un serveur UDP servant à recevoir les directions de contrôles du véhicule.
 
 Windows:
 ```powershell
@@ -46,5 +46,5 @@ Linux:
 python3 ./main.py
 ```
 
-## Credits
+## Crédits
  Sunfounders pour les contrôles de la caméra et du feed video de la caméra: [Sunfounder Smart Video Car Kit for Raspberry Pi](https://github.com/sunfounder/Sunfounder_Smart_Video_Car_Kit_for_RaspberryPi)
