@@ -79,10 +79,10 @@ class CommandsServer:
                 self.back_wheels.stop()
             elif wheel_command.action == 'forward':
                 self.back_wheels.speed = wheel_command.action_value
-                self.back_wheels.forward()
+                self.back_wheels.backward()
             elif wheel_command.action == 'backward':
                 self.back_wheels.speed = wheel_command.action_value
-                self.back_wheels.backward()
+                self.back_wheels.forward()
             elif wheel_command.action == 'set_speed':
                 self.back_wheels.speed = wheel_command.action_value
         elif command_type == FrontWheelCommand.type:
