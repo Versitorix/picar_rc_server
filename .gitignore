@@ -1,2 +1,4 @@
 __pycache__
-src/settings/dev.json
+settings/dev.json
+/venv/
+/.idea/

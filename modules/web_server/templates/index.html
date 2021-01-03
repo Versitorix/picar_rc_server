@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="save" content="history">
+    <!-- load MUI -->
+    <link href="//cdn.muicss.com/mui-0.6.9/css/mui.min.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.muicss.com/mui-0.6.9/js/mui.min.js"></script>
+    <style type="text/css">
+      html {
+        height: 100%;
+        width:  100%;
+        overflow: hidden;
+      }
+      body {
+        height: 100%;
+        width:  100%;
+      }
+      #div_appbar {
+        width:  100%;
+      }
+      #stream-container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #div_control {
+        width:  100%;
+        position: absolute;
+        bottom: 0;
+      }
+      #button_opacity {
+        opacity: 0.4;
+      }
+    </style>
+  </head>
+
+  <body class="mui--no-user-select" onkeydown="keydown_event(0)" onkeyup="keyup_event(0)">
+    <div id="div_appbar">
+      <div class="mui--z2 mui-appbar mui-container-fluid mui--bg-primary-dark mui--appbar-min-height mui--appbar-line-height">
+        <div class="mui-row">
+          <div class="mui-col-xs-1 mui-col-sm-1" align="right">
+          </div>
+          <div class="mui-col-xs-10 mui-col-md-10 mui--text-headline" align="center">
+            <div class="mui--appbar-height mui--appbar-line-height">
+              PiCar-V
+            </div>
+          </div>
+          <div class="mui-col-xs-1 mui-col-sm-1" align="left">
+            <form class="mui-form" action="/cali/" method="get" id="settings">
+            </form>
+          </div>
+        </div>
+      </div>
+      <br>
+    </div>
+    <div id="stream-container">
+      <img src="http://{{ host }}:8080/?action=stream" />
+    </div>
+  </body>
+</html>
